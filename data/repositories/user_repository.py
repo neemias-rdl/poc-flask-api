@@ -34,14 +34,14 @@ class UserRepository:
         self.connection = connection
 
 
-    def create_table(connection):
-        with connection.cursor() as cursor:
+    def create_table(self):
+        with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.CREATE_TABLE)
-            connection.commit()
+            self.connection.commit()
             return True
 
-    def get_all_users(connection):
-        with connection.cursor() as cursor:
+    def get_all_users(self):
+        with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.GET_ALL_USERS)
             rows = cursor.fetchall()
             users = []
@@ -58,8 +58,8 @@ class UserRepository:
                 users.append(user)
             return users
 
-    def get_user_by_id(connection, user_id):
-        with connection.cursor() as cursor:
+    def get_user_by_id(self, user_id):
+        with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.SELECT_USER_BY_ID, (user_id,))
             row = cursor.fetchone()
             if row:
@@ -67,15 +67,15 @@ class UserRepository:
             else:
                 return None
 
-    def insert_user(connection, user: User):
+    def create_user(self, user: User):
         username = user.username
         password = user.password
         first_name = user.first_name
         last_name = user.last_name
         phone_number = user.phone_number
 
-        with connection.cursor() as cursor:
+        with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.INSERT_USER, (username, password, first_name, last_name, phone_number))
             user_id = cursor.fetchone()[0]
-            connection.commit()
+            self.connection.commit()
             return user_id
