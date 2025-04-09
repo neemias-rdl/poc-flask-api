@@ -1,13 +1,11 @@
-# Creates all database tables
-# and populates them with initial data
-from data.daos.user_dao import CREATE_TABLE as CREATE_USER_TABLE
+from data.repositories.user_repository import UserRepository
 
-def create_tables(connection, statements):
-    with connection.cursor() as cursor:
-        for statement in statements:
-            cursor.execute(statement)
-            connection.commit()
 
-def create_database(connection):
-    # Create all tables
-    create_tables(connection, [CREATE_USER_TABLE])
+class Database:
+    def __init__(self, connection, user_repository: UserRepository):
+        self.user_repository = user_repository
+        self.connection = connection
+    
+    def create_tables(self):
+        self.user_repository.create_table(self.connection)
+        # Add other table creation methods here
