@@ -21,3 +21,6 @@ class AppDI:
 
     def get_dto(self, dto_name):
         return self._dtos.get(dto_name)
+    
+    def get_all_repositories(self):
+        return self._repositories

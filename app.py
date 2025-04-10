@@ -2,6 +2,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
+from config import configure_di, create_db
 from data.repositories.user_repository import UserRepository
 from domain.services.user_service import UserService
 from helpers.app_di import AppDI
@@ -23,19 +24,11 @@ def create_app():
     connection = setup_connection()
     
     # Register services and repos in DI
-    di = AppDI()
-    di.register_repository("user_repository", UserRepository(connection=connection))
-    user_repository = di.get_repository("user_repository")
-    di.register_service("user_service", UserService(user_repository=user_repository))
-
+    di = configure_di(connection)
+    
     # Create the database and tables
-    database = Database(user_repository=user_repository)
-    database.create_tables()
+    create_db(di)
 
-    # Register DTOs in DI
-    di.register_dto("user_dto", UserDto())
-
-    # Create the tables
     users_bp = create_users_blueprint(di)
     app.register_blueprint(users_bp, url_prefix="/users")
 
