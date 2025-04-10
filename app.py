@@ -10,8 +10,6 @@ from data.database.database import Database
 from routes.dtos.user_dto import UserDto
 from routes.user.user_routes import create_users_blueprint
 
-BASE_URL = "marmitas-go-v0"
-
 def setup_connection():
     load_dotenv()
     url = os.environ.get("DATABASE_URL")
