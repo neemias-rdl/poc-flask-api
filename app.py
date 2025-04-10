@@ -7,6 +7,7 @@ from domain.services.user_service import UserService
 from helpers.app_di import AppDI
 from helpers.connection_helper import parse_connection_url
 from data.database.database import Database
+from routes.dtos.user_dto import UserDto
 from routes.user.user_routes import create_users_blueprint
 
 BASE_URL = "marmitas-go-v0"
@@ -23,7 +24,7 @@ def create_app():
     app = Flask(__name__)
     connection = setup_connection()
     
-    # Register the database connection with the DI
+    # Register services and repos in DI
     di = AppDI()
     di.register_repository("user_repository", UserRepository(connection=connection))
     user_repository = di.get_repository("user_repository")
@@ -32,6 +33,9 @@ def create_app():
     # Create the database and tables
     database = Database(user_repository=user_repository)
     database.create_tables()
+
+    # Register DTOs in DI
+    di.register_dto("user_dto", UserDto())
 
     # Create the tables
     users_bp = create_users_blueprint(di)
