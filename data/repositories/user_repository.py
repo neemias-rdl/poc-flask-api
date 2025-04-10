@@ -26,8 +26,16 @@ class UserRepository:
     SELECT * FROM users WHERE id = %s;
     """
 
+    SELECT_USER_BY_USERNAME = """
+    SELECT * FROM users WHERE username = %s;
+    """
+
     GET_ALL_USERS = """
     SELECT * FROM users;
+    """
+
+    DELETE_USER_BY_ID = """
+    DELETE FROM users WHERE id = %s;
     """
 
     def __init__(self, connection):
@@ -66,6 +74,22 @@ class UserRepository:
                 return 
             else:
                 return None
+            
+    def get_user_by_username(self, username):
+        with self.connection.cursor() as cursor:
+            cursor.execute(UserRepository.SELECT_USER_BY_USERNAME, (username,))
+            row = cursor.fetchone()
+            if row:
+                return User(
+                    id=row[0],
+                    username=row[1],
+                    password=row[2],
+                    first_name=row[3],
+                    last_name=row[4],
+                    phone_number=row[5]
+                )
+            else:
+                return None
 
     def create_user(self, user: User):
         username = user.username
@@ -79,3 +103,10 @@ class UserRepository:
             user_id = cursor.fetchone()[0]
             self.connection.commit()
             return user_id
+        
+    def delete_user_by_id(self, user_id):
+        with self.connection.cursor() as cursor:
+            cursor.execute(UserRepository.DELETE_USER_BY_ID, (user_id,))
+            self.connection.commit()
+            return True
+        return False

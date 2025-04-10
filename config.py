@@ -2,10 +2,7 @@ from data.database.database import Database
 from data.repositories.user_repository import UserRepository
 from domain.services.user_service import UserService
 from helpers.app_di import AppDI
-from helpers.auth.key_gen import generate_secret_key
 from routes.dtos.user_dto import UserDto
-
-SECRET_KEY = generate_secret_key()
 
 def create_db(di: AppDI):
     repositories = di.get_all_repositories()

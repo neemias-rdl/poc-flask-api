@@ -9,6 +9,7 @@ from helpers.app_di import AppDI
 from helpers.connection_helper import parse_connection_url
 from data.database.database import Database
 from routes.dtos.user_dto import UserDto
+from routes.user.auth_routes import create_auth_blueprint
 from routes.user.user_routes import create_users_blueprint
 
 def setup_connection():
@@ -31,6 +32,8 @@ def create_app():
 
     users_bp = create_users_blueprint(di)
     app.register_blueprint(users_bp, url_prefix="/users")
+    auth_bp = create_auth_blueprint(di)
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     return app
 
