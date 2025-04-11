@@ -10,4 +10,5 @@ class UserDto:
             "first_name": user.first_name,
             "last_name": user.last_name,
             "phone_number": user.phone_number,
+            "role": user.role.value if hasattr(user.role, 'value') else user.role
         }

@@ -10,15 +10,16 @@ class UserRepository:
         password VARCHAR(255) NOT NULL,
         first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
-        phone_number VARCHAR(255) NOT NULL
+        phone_number VARCHAR(255) NOT NULL,
+        role VARCHAR(50) NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
     CREATE INDEX IF NOT EXISTS idx_users_id ON users (id);
     """
 
     INSERT_USER = """
-    INSERT INTO users (username, password, first_name, last_name, phone_number)
-    VALUES (%s, %s, %s, %s, %s)
+    INSERT INTO users (username, password, first_name, last_name, phone_number, role)
+    VALUES (%s, %s, %s, %s, %s, %s)
     RETURNING id;
     """
 
@@ -60,7 +61,8 @@ class UserRepository:
                     password=row[2],
                     first_name=row[3],
                     last_name=row[4],
-                    phone_number=row[5]
+                    phone_number=row[5],
+                    role=row[6]
                 )
 
                 users.append(user)
@@ -71,7 +73,15 @@ class UserRepository:
             cursor.execute(UserRepository.SELECT_USER_BY_ID, (user_id,))
             row = cursor.fetchone()
             if row:
-                return 
+                return User(
+                    id=row[0],
+                    username=row[1],
+                    password=row[2],
+                    first_name=row[3],
+                    last_name=row[4],
+                    phone_number=row[5],
+                    role=row[6]
+                )
             else:
                 return None
             
@@ -86,7 +96,8 @@ class UserRepository:
                     password=row[2],
                     first_name=row[3],
                     last_name=row[4],
-                    phone_number=row[5]
+                    phone_number=row[5],
+                    role=row[6]
                 )
             else:
                 return None
@@ -97,9 +108,10 @@ class UserRepository:
         first_name = user.first_name
         last_name = user.last_name
         phone_number = user.phone_number
+        role = user.role.value if hasattr(user.role, 'value') else user.role
 
         with self.connection.cursor() as cursor:
-            cursor.execute(UserRepository.INSERT_USER, (username, password, first_name, last_name, phone_number))
+            cursor.execute(UserRepository.INSERT_USER, (username, password, first_name, last_name, phone_number, role))
             user_id = cursor.fetchone()[0]
             self.connection.commit()
             return user_id

@@ -9,12 +9,10 @@ class JWTService:
         self.refresh_token_expires = refresh_token_expires
     
     def create_access_token(self, user: User):
-        """
-        Create a new access token for the user
-        """
         payload = {
             'user_id': user.id,
             'username': user.username,
+            'role': user.role.value if hasattr(user.role, 'value') else user.role,
             'exp': datetime.now(datetime.UTC) + self.access_token_expires,
             'iat': datetime.now(datetime.UTC),
             'type': 'access'
@@ -22,12 +20,10 @@ class JWTService:
         return jwt.encode(payload, self.secret_key, algorithm='HS256')
     
     def create_refresh_token(self, user: User):
-        """
-        Create a new refresh token for the user
-        """
         payload = {
             'user_id': user.id,
             'username': user.username,
+            'role': user.role.value if hasattr(user.role, 'value') else user.role,
             'exp': datetime.now(datetime.UTC) + self.refresh_token_expires,
             'iat': datetime.now(datetime.UTC),
             'type': 'refresh'

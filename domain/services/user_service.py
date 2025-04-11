@@ -31,7 +31,8 @@ class UserService:
             password= hashed_password.decode('utf8'),
             first_name= user_data['first_name'],
             last_name= user_data['last_name'],
-            phone_number= user_data['phone_number']
+            phone_number= user_data['phone_number'],
+            role= user_data['role']
         )
 
         return self.user_repository.create_user(user)

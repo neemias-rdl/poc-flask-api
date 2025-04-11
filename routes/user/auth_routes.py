@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from domain.enums.roles import Role
 from domain.services.user_service import UserService
 from domain.services.jwt_service import JWTService
 from routes.dtos.user_dto import UserDto
@@ -12,9 +13,10 @@ def create_auth_blueprint(di):
     jwt_service: JWTService = di.get_service("jwt_service")
     user_dto: UserDto = di.get_dto("user_dto")
 
-    @auth_bp.route("/cadastro/", methods=["POST"])
-    def cadastro():
-        json_data = request.json 
+    @auth_bp.route("/register/", methods=["POST"])
+    def register():
+        json_data = request.json
+        json_data["role"] = Role.USER
         response = user_service.create_user(json_data)
         return jsonify({"message": "User created", "data": str(response)}), 200
 
