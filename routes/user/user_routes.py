@@ -3,7 +3,7 @@ from domain.enums.roles import Role
 from domain.services.user_service import UserService    
 from flask import Blueprint, jsonify, request
 
-from helpers.auth.auth import jwt_required, role_required
+from helpers.auth.route_decorators import jwt_required, role_required
 from routes.dtos.user_dto import UserDto
 
 def create_users_blueprint(di):
@@ -14,9 +14,12 @@ def create_users_blueprint(di):
     @users_bp.route("/", methods=["POST"])
     @jwt_required(di)
     def post_user():
-        json_data = request.json 
-        response = user_service.create_user(json_data)
-        return jsonify({"message": "User created", "data": str(response)}), 200
+        try:
+            json_data = request.json 
+            response = user_service.create_user(json_data)
+            return jsonify({"message": "User created", "data": str(response)}), 200
+        except Exception as e:
+            return jsonify({"message": "Error creating user", "error": str(e)}), 500
 
     @users_bp.route("/", methods=["GET"])
     @jwt_required(di)

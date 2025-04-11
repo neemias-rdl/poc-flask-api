@@ -30,10 +30,10 @@ def create_app():
     # Create the database and tables
     create_db(di)
 
-    users_bp = create_users_blueprint(di)
-    app.register_blueprint(users_bp, url_prefix="/users")
     auth_bp = create_auth_blueprint(di)
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    users_bp = create_users_blueprint(di)
+    app.register_blueprint(users_bp, url_prefix="/users")
 
     return app
 

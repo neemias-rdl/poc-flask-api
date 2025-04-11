@@ -3,8 +3,8 @@ from flask import Blueprint, jsonify, request
 from domain.enums.roles import Role
 from domain.services.user_service import UserService
 from domain.services.jwt_service import JWTService
+from helpers.auth.route_decorators import jwt_required
 from routes.dtos.user_dto import UserDto
-from helpers.auth.auth import jwt_required
 
 
 def create_auth_blueprint(di):

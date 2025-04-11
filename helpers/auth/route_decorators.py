@@ -11,13 +11,13 @@ def validate_token_from_header(req, jwt_service: JWTService):
 
     auth_header = req.headers.get('Authorization')
     if not auth_header or not auth_header.startswith('Bearer '):
-        raise jsonify({"message": "Missing or invalid Authorization header"}), 401
+        return jsonify({"message": "Missing or invalid Authorization header"}), 401
     
     token = auth_header.split(' ')[1]
 
     # Validate the token
     if not jwt_service.is_token_valid(token):
-        raise jsonify({"message": "Invalid or expired token"}), 401
+        return jsonify({"message": "Invalid or expired token"}), 401
 
     return token
 # Protects routes that require authentication
@@ -29,19 +29,27 @@ def jwt_required(di: AppDI):
 
             try:
                 token = validate_token_from_header(request, jwt_service)
+                
+                # If token is a tuple, it means an error response was returned
+                if isinstance(token, tuple):
+                    return token
             
-                # Get the user ID from the token# Get the user ID from the token
+                print(f"token: {token}")
+                # Get the user ID from the token
                 user_id = jwt_service.get_user_id_from_token(token)
                 if not user_id:
                     return jsonify({"message": "Invalid token"}), 401
                 
                 # Add the user_id to the request context
                 request.user_id = user_id
+                print(f"user_id: {user_id}")
+
                 
                 return decorator_func(*args, **kwargs)
             
             except Exception as e:
-                return e
+                print(f"error: {e}")
+                return jsonify({"message": str(e)}), 401
         return decorated_function
     return decorator
 
@@ -54,6 +62,10 @@ def role_required(di: AppDI, required_role: Role):
             
             try:
                 token = validate_token_from_header(request, jwt_service)
+                
+                # If token is a tuple, it means an error response was returned
+                if isinstance(token, tuple):
+                    return token
 
                 # Get the user ID and role from the token
                 payload = jwt_service.decode_token(token)
@@ -72,6 +84,6 @@ def role_required(di: AppDI, required_role: Role):
                 
                 return decorator_func(*args, **kwargs)
             except Exception as e:
-                return e
+                return jsonify({"message": str(e)}), 401
         return decorated_function
     return decorator

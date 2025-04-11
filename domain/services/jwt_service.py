@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import jwt
 from domain.entities.user import User
 
@@ -13,8 +13,8 @@ class JWTService:
             'user_id': user.id,
             'username': user.username,
             'role': user.role.value if hasattr(user.role, 'value') else user.role,
-            'exp': datetime.now(datetime.UTC) + self.access_token_expires,
-            'iat': datetime.now(datetime.UTC),
+            'exp': datetime.now(tz=timezone.utc) + self.access_token_expires,
+            'iat': datetime.now(tz=timezone.utc),
             'type': 'access'
         }
         return jwt.encode(payload, self.secret_key, algorithm='HS256')
@@ -24,8 +24,8 @@ class JWTService:
             'user_id': user.id,
             'username': user.username,
             'role': user.role.value if hasattr(user.role, 'value') else user.role,
-            'exp': datetime.now(datetime.UTC) + self.refresh_token_expires,
-            'iat': datetime.now(datetime.UTC),
+            'exp': datetime.now(tz=timezone.utc) + self.refresh_token_expires,
+            'iat': datetime.now(tz=timezone.utc),
             'type': 'refresh'
         }
         return jwt.encode(payload, self.secret_key, algorithm='HS256')
@@ -41,6 +41,8 @@ class JWTService:
     
     def is_token_valid(self, token):
         payload = self.decode_token(token)
+        print(f"payload: {payload}")
+        
         return payload is not None
     
     def get_user_id_from_token(self, token):

@@ -23,7 +23,7 @@ def configure_di(connection) -> AppDI:
     di.register_service("user_service", UserService(user_repository=user_repository))
     
     # JWT Service
-    jwt_secret_key = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+    jwt_secret_key = os.environ.get("JWT_SECRET_KEY")
     jwt_access_token_expires = timedelta(hours=1)
     jwt_refresh_token_expires = timedelta(days=30)
     di.register_service("jwt_service", JWTService(
