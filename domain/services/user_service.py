@@ -8,7 +8,13 @@ class UserService:
 
     def login(self, username, password):
         user = self.user_repository.get_user_by_username(username)
-        return check_password(password, user.password)
+        if not user:
+            return None
+        
+        if check_password(password, user.password):
+            return user
+        
+        return None
 
     def get_user(self, user_id=None):
         if user_id:

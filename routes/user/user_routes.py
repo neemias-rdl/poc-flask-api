@@ -2,6 +2,7 @@ from data.repositories.user_repository import UserRepository
 from domain.services.user_service import UserService    
 from flask import Blueprint, jsonify, request
 
+from helpers.auth.auth import jwt_required
 from routes.dtos.user_dto import UserDto
 
 def create_users_blueprint(di):
@@ -10,12 +11,14 @@ def create_users_blueprint(di):
     user_dto: UserDto = di.get_dto("user_dto")
 
     @users_bp.route("/", methods=["POST"])
+    @jwt_required(di)
     def post_user():
         json_data = request.json 
         response = user_service.create_user(json_data)
         return jsonify({"message": "User created", "data": str(response)}), 200
 
     @users_bp.route("/", methods=["GET"])
+    @jwt_required(di)
     def get_user():
         user_id = request.args.get("user_id")
         user = user_service.get_user(user_id)
@@ -25,6 +28,7 @@ def create_users_blueprint(di):
         return jsonify({"message": "Got User(s)", "data": str(user_response)}), 200
 
     @users_bp.route("/<int:user_id>", methods=["DELETE"])
+    @jwt_required(di)
     def delete_user_by_id(user_id):
         user = user_service.delete_user_by_id(user_id)
         if user:
