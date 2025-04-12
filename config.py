@@ -3,7 +3,7 @@ from data.repositories.user_repository import UserRepository
 from domain.services.user_service import UserService
 from domain.services.jwt_service import JWTService
 from helpers.app_di import AppDI
-from routes.dtos.user_dto import UserDto
+from controllers.dtos.user_dto import UserDto
 import os
 from datetime import timedelta
 

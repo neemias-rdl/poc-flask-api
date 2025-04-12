@@ -16,6 +16,9 @@ def setup_connection():
     load_dotenv()
     url = os.environ.get("DATABASE_URL")
     parsed_url_dict = parse_connection_url(url)
+    # Add connection timeout settings
+    parsed_url_dict['connect_timeout'] = 10  # 10 seconds connection timeout
+    parsed_url_dict['options'] = '-c statement_timeout=5000'  # 5 seconds query timeout
     connection = psycopg2.connect(**parsed_url_dict)
     return connection
 

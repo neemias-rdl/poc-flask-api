@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5050:5000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - .:/app
+    networks:
+      - flask-network
+
+volumes:
+  postgres_data:
+
+networks:
+  flask-network:
+    driver: bridge 
