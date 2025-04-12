@@ -2,20 +2,6 @@
 
 A production-ready Flask API base project with best practices and common features built-in. This project serves as a foundation for building scalable REST APIs with Python and Flask.
 
-## Features
-
-- Clean Architecture with Domain-Driven Design (DDD)
-- JWT Authentication
-- PostgreSQL Database Integration
-- Docker & Docker Compose Support
-- Dependency Injection
-- Type Hints
-- Repository Pattern
-- Service Layer Pattern
-- DTOs for Request/Response Handling
-- Environment-based Configuration
-- Modular Blueprint Structure
-
 ## Dependencies
 
 - Python 3.11
