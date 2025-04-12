@@ -37,10 +37,6 @@ A production-ready Flask API base project with best practices and common feature
 ### Environment Setup
 
 1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd <your-project-name>
-```
 
 2. Create a `.env` file in the root directory:
 ```env
