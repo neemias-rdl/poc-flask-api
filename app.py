@@ -8,9 +8,9 @@ from domain.services.user_service import UserService
 from helpers.app_di import AppDI
 from helpers.connection_helper import parse_connection_url
 from data.database.database import Database
-from routes.dtos.user_dto import UserDto
-from routes.user.auth_routes import create_auth_blueprint
-from routes.user.user_routes import create_users_blueprint
+from controllers.dtos.user_dto import UserDto
+from controllers.user.auth_controller import create_auth_blueprint
+from controllers.user.user_controller import create_users_blueprint
 
 def setup_connection():
     load_dotenv()

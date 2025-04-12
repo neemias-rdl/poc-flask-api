@@ -4,7 +4,7 @@ from domain.services.user_service import UserService
 from flask import Blueprint, jsonify, request
 
 from helpers.auth.route_decorators import jwt_required, role_required
-from routes.dtos.user_dto import UserDto
+from controllers.dtos.user_dto import UserDto
 
 def create_users_blueprint(di):
     users_bp = Blueprint("users", __name__)

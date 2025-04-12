@@ -4,7 +4,7 @@ from domain.enums.roles import Role
 from domain.services.user_service import UserService
 from domain.services.jwt_service import JWTService
 from helpers.auth.route_decorators import jwt_required
-from routes.dtos.user_dto import UserDto
+from controllers.dtos.user_dto import UserDto
 
 
 def create_auth_blueprint(di):
