@@ -16,7 +16,7 @@ A production-ready Flask API base project with best practices and common feature
 - Environment-based Configuration
 - Modular Blueprint Structure
 
-## Tech Stack
+## Dependencies
 
 - Python 3.11
 - Flask
