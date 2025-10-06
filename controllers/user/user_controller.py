@@ -1,10 +1,11 @@
 from data.repositories.user_repository import UserRepository
 from domain.enums.roles import Role
-from domain.services.user_service import UserService    
+from domain.services.user_service import UserService
 from flask import Blueprint, jsonify, request
 
 from helpers.auth.route_decorators import jwt_required, role_required
 from controllers.dtos.user_dto import UserDto
+
 
 def create_users_blueprint(di):
     users_bp = Blueprint("users", __name__)
@@ -15,7 +16,7 @@ def create_users_blueprint(di):
     @jwt_required(di)
     def post_user():
         try:
-            json_data = request.json 
+            json_data = request.json
             response = user_service.create_user(json_data)
             return jsonify({"message": "User created", "data": str(response)}), 200
         except Exception as e:
@@ -41,5 +42,5 @@ def create_users_blueprint(di):
             return jsonify({"message": "User deleted", "data": str(user)}), 200
         else:
             return jsonify({"message": "User not found"}), 404
-        
+
     return users_bp

@@ -1,7 +1,7 @@
 from domain.entities.user import User
 
 
-class UserDto:    
+class UserDto:
     def to_json(self, user: User) -> dict:
         return {
             "id": user.id,
@@ -10,5 +10,5 @@ class UserDto:
             "first_name": user.first_name,
             "last_name": user.last_name,
             "phone_number": user.phone_number,
-            "role": user.role.value if hasattr(user.role, 'value') else user.role
+            "role": user.role.value if hasattr(user.role, "value") else user.role,
         }

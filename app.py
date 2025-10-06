@@ -12,24 +12,26 @@ from controllers.dtos.user_dto import UserDto
 from controllers.user.auth_controller import create_auth_blueprint
 from controllers.user.user_controller import create_users_blueprint
 
+
 def setup_connection():
     load_dotenv()
     url = os.environ.get("DATABASE_URL")
     parsed_url_dict = parse_connection_url(url)
     # Add connection timeout settings
-    parsed_url_dict['connect_timeout'] = 10  # 10 seconds connection timeout
-    parsed_url_dict['options'] = '-c statement_timeout=5000'  # 5 seconds query timeout
+    parsed_url_dict["connect_timeout"] = 10  # 10 seconds connection timeout
+    parsed_url_dict["options"] = "-c statement_timeout=5000"  # 5 seconds query timeout
     connection = psycopg2.connect(**parsed_url_dict)
     return connection
 
-def create_app():   
+
+def create_app():
     # Create a Flask application instance
     app = Flask(__name__)
     connection = setup_connection()
-    
+
     # Register services and repos in DI
     di = configure_di(connection)
-    
+
     # Create the database and tables
     create_db(di)
 
@@ -39,6 +41,7 @@ def create_app():
     app.register_blueprint(users_bp, url_prefix="/users")
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()

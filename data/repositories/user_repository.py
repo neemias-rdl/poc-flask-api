@@ -42,7 +42,6 @@ class UserRepository:
     def __init__(self, connection):
         self.connection = connection
 
-
     def create_table(self):
         with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.CREATE_TABLE)
@@ -62,7 +61,7 @@ class UserRepository:
                     first_name=row[3],
                     last_name=row[4],
                     phone_number=row[5],
-                    role=row[6]
+                    role=row[6],
                 )
 
                 users.append(user)
@@ -80,11 +79,11 @@ class UserRepository:
                     first_name=row[3],
                     last_name=row[4],
                     phone_number=row[5],
-                    role=row[6]
+                    role=row[6],
                 )
             else:
                 return None
-            
+
     def get_user_by_username(self, username):
         with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.SELECT_USER_BY_USERNAME, (username,))
@@ -97,7 +96,7 @@ class UserRepository:
                     first_name=row[3],
                     last_name=row[4],
                     phone_number=row[5],
-                    role=row[6]
+                    role=row[6],
                 )
             else:
                 return None
@@ -108,14 +107,17 @@ class UserRepository:
         first_name = user.first_name
         last_name = user.last_name
         phone_number = user.phone_number
-        role = user.role.value if hasattr(user.role, 'value') else user.role
+        role = user.role.value if hasattr(user.role, "value") else user.role
 
         with self.connection.cursor() as cursor:
-            cursor.execute(UserRepository.INSERT_USER, (username, password, first_name, last_name, phone_number, role))
+            cursor.execute(
+                UserRepository.INSERT_USER,
+                (username, password, first_name, last_name, phone_number, role),
+            )
             user_id = cursor.fetchone()[0]
             self.connection.commit()
             return user_id
-        
+
     def delete_user_by_id(self, user_id):
         with self.connection.cursor() as cursor:
             cursor.execute(UserRepository.DELETE_USER_BY_ID, (user_id,))
