@@ -1,7 +1,10 @@
 from domain.enums.roles import Role
 
+
 class User:
-    def __init__(self, id, username, password, first_name, last_name, phone_number, role: Role):
+    def __init__(
+        self, id, username, password, first_name, last_name, phone_number, role: Role
+    ):
         self.id = id
         self.username = username
         self.password = password
