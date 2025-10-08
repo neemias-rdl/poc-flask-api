@@ -15,6 +15,7 @@ def create_users_blueprint(di):
 
     @users_bp.route("/", methods=["POST"])
     @jwt_required(di)
+    @role_required(di, Role.ADMIN)
     def post_user():
         json_data = request.json
         response: ResponseTemplate = user_service.create_user(json_data)
