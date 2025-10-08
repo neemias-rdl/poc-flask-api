@@ -41,3 +41,15 @@ class User:
                 else data.get("role")
             ),
         )
+
+    @classmethod
+    def from_table_row(cls, table_row):
+        return cls(
+            id=table_row[0],
+            username=table_row[1],
+            password=table_row[2],
+            first_name=table_row[3],
+            last_name=table_row[4],
+            phone_number=table_row[5],
+            role=table_row[6],
+        )

@@ -8,14 +8,13 @@ import os
 from datetime import timedelta
 
 
-def create_db(di: AppDI):
-    repositories = di.get_all_repositories()
-    database = Database(repositories=repositories)
-    database.create_tables()
-
-
 def configure_di(connection) -> AppDI:
     di = AppDI()
+
+    # Database
+    di.register_database(Database(version=0, connection=connection))
+    database = di.get_database()
+    database.create_tables()
 
     # Repositories
     di.register_repository("user_repository", UserRepository(connection=connection))
