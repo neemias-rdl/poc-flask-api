@@ -12,3 +12,13 @@ class User:
         self.last_name = last_name
         self.phone_number = phone_number
         self.role = role
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "phone_number": self.phone_number,
+            "role": self.role.value if hasattr(self.role, "value") else self.role,
+        }
