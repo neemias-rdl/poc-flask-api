@@ -1,26 +1,76 @@
+from http import HTTPStatus
 from data.repositories.user_repository import UserRepository
 from domain.entities.user import User
 from helpers.auth.auth import check_password, get_hashed_password
+from helpers.response_template import ResponseTemplate
 
 
 class UserService:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
-    def login(self, username, password):
-        user = self.user_repository.get_user_by_username(username)
+    def login(self, username, password) -> ResponseTemplate:
+        try:
+            user = self.user_repository.get_user_by_username(username)
+        except Exception as e:
+            return ResponseTemplate(
+                data=None,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                message="Database error",
+            )
+
         if not user:
-            return None
+            return ResponseTemplate(
+                data=None,
+                status=HTTPStatus.UNAUTHORIZED,
+                message="Invalid credentials",
+            )
 
         if check_password(password, user.password):
-            return user
+            return ResponseTemplate(
+                data=user.to_dict(),
+                status=HTTPStatus.OK,
+                message="Login successful",
+            )
 
-        return None
+        return ResponseTemplate(
+            data=None,
+            status=HTTPStatus.UNAUTHORIZED,
+            message="Invalid credentials",
+        )
 
-    def get_user(self, user_id=None):
-        if user_id:
-            return self.user_repository.get_user_by_id(user_id)
-        return self.user_repository.get_all_users()
+    def get_user(self, user_id=None) -> ResponseTemplate:
+        try:
+            if user_id:
+                user = self.user_repository.get_user_by_id(user_id)
+                if user:
+                    return ResponseTemplate(
+                        data=user.to_dict(),
+                        status=HTTPStatus.OK,
+                        message="User fetched successfully",
+                    )
+            else:
+                try:
+                    users = self.user_repository.get_all_users()
+                    users_dict = [user.to_dict() for user in users]
+                    return ResponseTemplate(
+                        data=users_dict,
+                        status=HTTPStatus.OK,
+                        message="Users fetched successfully",
+                    )
+                except Exception as e:
+                    return ResponseTemplate(
+                        data=None,
+                        status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                        message="Database error",
+                    )
+
+        except Exception as e:
+            return ResponseTemplate(
+                data=None,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                message="Database error",
+            )
 
     def create_user(self, user_data):
 
@@ -36,7 +86,31 @@ class UserService:
             role=user_data["role"],
         )
 
-        return self.user_repository.create_user(user)
+        try:
+            self.user_repository.create_user(user)
+            return ResponseTemplate(
+                data=user.to_dict(),
+                status=HTTPStatus.CREATED,
+                message="User created successfully",
+            )
+        except Exception as e:
+            return ResponseTemplate(
+                data=None,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                message="Database error",
+            )
 
-    def delete_user_by_id(self, user_id):
-        return self.user_repository.delete_user_by_id(user_id)
+    def delete_user_by_id(self, user_id) -> ResponseTemplate:
+        try:
+            self.user_repository.delete_user_by_id(user_id)
+            return ResponseTemplate(
+                data={"user_id": user_id},
+                status=HTTPStatus.OK,
+                message="User deleted successfully",
+            )
+        except Exception as e:
+            return ResponseTemplate(
+                data=None,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                message="Database error",
+            )
