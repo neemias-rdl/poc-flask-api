@@ -20,11 +20,11 @@ def create_users_blueprint(di):
         response: ResponseTemplate = user_service.create_user(json_data)
         return jsonify(response.to_dict()), response.status
 
-    @users_bp.route("/", methods=["GET"])
+    @users_bp.route("/", defaults={"user_id": None}, methods=["GET"])
+    @users_bp.route("/<int:user_id>", methods=["GET"])
     @jwt_required(di)
     @role_required(di, Role.ADMIN)
-    def get_user():
-        user_id = request.args.get("user_id")
+    def get_user(user_id):
         response: ResponseTemplate = user_service.get_user(user_id)
         return jsonify(response.to_dict()), response.status
 
