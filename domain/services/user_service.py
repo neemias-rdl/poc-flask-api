@@ -9,7 +9,7 @@ class UserService:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
-    def login(self, username, password):
+    def login(self, username, password) -> ResponseTemplate:
         try:
             user = self.user_repository.get_user_by_username(username)
         except Exception as e:
@@ -39,7 +39,7 @@ class UserService:
             message="Invalid credentials",
         ).to_dict()
 
-    def get_user(self, user_id=None):
+    def get_user(self, user_id=None) -> ResponseTemplate:
         try:
             if user_id:
                 user = self.user_repository.get_user_by_id(user_id)
@@ -91,7 +91,7 @@ class UserService:
                 message="Database error",
             ).to_dict()
 
-    def delete_user_by_id(self, user_id):
+    def delete_user_by_id(self, user_id) -> ResponseTemplate:
         try:
             self.user_repository.delete_user_by_id(user_id)
             return ResponseTemplate(
