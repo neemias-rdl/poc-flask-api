@@ -26,9 +26,6 @@ class User:
             "role": self.role.value if hasattr(self.role, "value") else self.role,
         }
 
-    def to_table(self):
-        pass
-
     @classmethod
     def from_dict(cls, data):
         return cls(
