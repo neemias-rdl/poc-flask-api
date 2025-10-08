@@ -17,7 +17,7 @@ def create_users_blueprint(di):
     @jwt_required(di)
     def post_user():
         json_data = request.json
-        response = user_service.create_user(json_data)
+        response: ResponseTemplate = user_service.create_user(json_data)
         return jsonify(response.to_dict()), response.status
 
     @users_bp.route("/", methods=["GET"])
@@ -25,14 +25,14 @@ def create_users_blueprint(di):
     @role_required(di, Role.ADMIN)
     def get_user():
         user_id = request.args.get("user_id")
-        response = user_service.get_user(user_id)
+        response: ResponseTemplate = user_service.get_user(user_id)
         return jsonify(response.to_dict()), response.status
 
     @users_bp.route("/<int:user_id>", methods=["DELETE"])
     @jwt_required(di)
     @role_required(di, Role.ADMIN)
     def delete_user_by_id(user_id):
-        response = user_service.delete_user_by_id(user_id)
+        response: ResponseTemplate = user_service.delete_user_by_id(user_id)
         return jsonify(response.to_dict()), response.status
 
     return users_bp

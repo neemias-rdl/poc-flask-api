@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
+from domain.entities.user import User
 from domain.enums.roles import Role
 from domain.services.user_service import UserService
 from domain.services.jwt_service import JWTService
@@ -28,7 +29,8 @@ def create_auth_blueprint(di):
         json_data = request.json
         response = user_service.login(json_data["username"], json_data["password"])
         if response.status == HTTPStatus.OK:
-            user = response.data
+            userDict = response.data
+            user = User.from_dict(userDict)
             # Generate JWT tokens
             access_token = jwt_service.create_access_token(user)
             refresh_token = jwt_service.create_refresh_token(user)
