@@ -17,27 +17,27 @@ class UserService:
                 data=None,
                 status=HTTPStatus.INTERNAL_SERVER_ERROR,
                 message="Database error",
-            ).to_dict()
+            )
 
         if not user:
             return ResponseTemplate(
                 data=None,
                 status=HTTPStatus.UNAUTHORIZED,
                 message="Invalid credentials",
-            ).to_dict()
+            )
 
         if check_password(password, user.password):
             return ResponseTemplate(
                 data=user.to_dict(),
                 status=HTTPStatus.OK,
                 message="Login successful",
-            ).to_dict()
+            )
 
         return ResponseTemplate(
             data=None,
             status=HTTPStatus.UNAUTHORIZED,
             message="Invalid credentials",
-        ).to_dict()
+        )
 
     def get_user(self, user_id=None) -> ResponseTemplate:
         try:
@@ -48,20 +48,20 @@ class UserService:
                         data=user.to_dict(),
                         status=HTTPStatus.OK,
                         message="User fetched successfully",
-                    ).to_dict()
+                    )
 
                 return ResponseTemplate(
                     data=None,
                     status=HTTPStatus.NOT_FOUND,
                     message="User not found",
-                ).to_dict()
+                )
 
         except Exception as e:
             return ResponseTemplate(
                 data=None,
                 status=HTTPStatus.INTERNAL_SERVER_ERROR,
                 message="Database error",
-            ).to_dict()
+            )
 
     def create_user(self, user_data):
 
@@ -83,13 +83,13 @@ class UserService:
                 data=user.to_dict(),
                 status=HTTPStatus.CREATED,
                 message="User created successfully",
-            ).to_dict()
+            )
         except Exception as e:
             return ResponseTemplate(
                 data=None,
                 status=HTTPStatus.INTERNAL_SERVER_ERROR,
                 message="Database error",
-            ).to_dict()
+            )
 
     def delete_user_by_id(self, user_id) -> ResponseTemplate:
         try:
@@ -98,10 +98,10 @@ class UserService:
                 data={"user_id": user_id},
                 status=HTTPStatus.OK,
                 message="User deleted successfully",
-            ).to_dict()
+            )
         except Exception as e:
             return ResponseTemplate(
                 data=None,
                 status=HTTPStatus.INTERNAL_SERVER_ERROR,
                 message="Database error",
-            ).to_dict()
+            )
