@@ -49,12 +49,21 @@ class UserService:
                         status=HTTPStatus.OK,
                         message="User fetched successfully",
                     )
-
-                return ResponseTemplate(
-                    data=None,
-                    status=HTTPStatus.NOT_FOUND,
-                    message="User not found",
-                )
+            else:
+                try:
+                    users = self.user_repository.get_all_users()
+                    users_dict = [user.to_dict() for user in users]
+                    return ResponseTemplate(
+                        data=users_dict,
+                        status=HTTPStatus.OK,
+                        message="Users fetched successfully",
+                    )
+                except Exception as e:
+                    return ResponseTemplate(
+                        data=None,
+                        status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                        message="Database error",
+                    )
 
         except Exception as e:
             return ResponseTemplate(
