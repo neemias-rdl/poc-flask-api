@@ -2,17 +2,13 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
-from config import configure_di, create_db
-from data.repositories.user_repository import UserRepository
-from domain.services.user_service import UserService
-from helpers.app_di import AppDI
+from config import configure_di
 from helpers.connection_helper import parse_connection_url
-from data.database.database import Database
-from controllers.dtos.user_dto import UserDto
 from controllers.user.auth_controller import create_auth_blueprint
 from controllers.user.user_controller import create_users_blueprint
 
 
+# TODO: Try to simplify this method or place it somewhere else
 def setup_connection():
     load_dotenv()
     url = os.environ.get("DATABASE_URL")
@@ -32,9 +28,8 @@ def create_app():
     # Register services and repos in DI
     di = configure_di(connection)
 
-    # Create the database and tables
-    create_db(di)
-
+    # Register blueprints
+    # TODO: Move blueprint registration to a DI
     auth_bp = create_auth_blueprint(di)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     users_bp = create_users_blueprint(di)

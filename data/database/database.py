@@ -1,12 +1,10 @@
-from data.repositories.user_repository import UserRepository
-from helpers.app_di import AppDI
+from data.database.migrations.migrationV0 import migrate_to_v0
 
 
 class Database:
-    def __init__(self, repositories):
-        self.repositories = repositories
+    def __init__(self, version: int, connection):
+        self.version = version
+        self.connection = connection
 
     def create_tables(self):
-        # Create tables using the repositories
-        for repo in self.repositories.values():
-            repo.create_table()
+        migrate_to_v0(connection=self.connection)

@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from helpers.auth.route_decorators import jwt_required, role_required
 from controllers.dtos.user_dto import UserDto
+from helpers.response_template import ResponseTemplate
 
 
 def create_users_blueprint(di):
@@ -14,33 +15,25 @@ def create_users_blueprint(di):
 
     @users_bp.route("/", methods=["POST"])
     @jwt_required(di)
+    @role_required(di, Role.ADMIN)
     def post_user():
-        try:
-            json_data = request.json
-            response = user_service.create_user(json_data)
-            return jsonify({"message": "User created", "data": str(response)}), 200
-        except Exception as e:
-            return jsonify({"message": "Error creating user", "error": str(e)}), 500
+        json_data = request.json
+        response: ResponseTemplate = user_service.create_user(json_data)
+        return jsonify(response.to_dict()), response.status
 
-    @users_bp.route("/", methods=["GET"])
+    @users_bp.route("/", defaults={"user_id": None}, methods=["GET"])
+    @users_bp.route("/<int:user_id>", methods=["GET"])
     @jwt_required(di)
     @role_required(di, Role.ADMIN)
-    def get_user():
-        user_id = request.args.get("user_id")
-        user = user_service.get_user(user_id)
-        user_response = []
-        for u in user:
-            user_response.append(user_dto.to_json(u))
-        return jsonify({"message": "Got User(s)", "data": str(user_response)}), 200
+    def get_user(user_id):
+        response: ResponseTemplate = user_service.get_user(user_id)
+        return jsonify(response.to_dict()), response.status
 
     @users_bp.route("/<int:user_id>", methods=["DELETE"])
     @jwt_required(di)
     @role_required(di, Role.ADMIN)
     def delete_user_by_id(user_id):
-        user = user_service.delete_user_by_id(user_id)
-        if user:
-            return jsonify({"message": "User deleted", "data": str(user)}), 200
-        else:
-            return jsonify({"message": "User not found"}), 404
+        response: ResponseTemplate = user_service.delete_user_by_id(user_id)
+        return jsonify(response.to_dict()), response.status
 
     return users_bp

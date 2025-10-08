@@ -4,6 +4,12 @@ class AppDI:
         self._repositories = {}
         self._dtos = {}
 
+    def register_database(self, database_instance):
+        self._database = database_instance
+
+    def get_database(self):
+        return self._database
+
     def register_service(self, service_name, service_instance):
         self._services[service_name] = service_instance
 
